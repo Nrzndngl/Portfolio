@@ -1,24 +1,27 @@
 const dotenv = require('dotenv');
-const readline = require('readline');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 
 dotenv.config();
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-
-const ask = (q) => new Promise(resolve => rl.question(q, resolve));
-
 (async () => {
   try {
     await connectDB();
 
-    const name = await ask('Admin name: ');
-    const email = await ask('Admin email: ');
-    const password = await ask('Admin password (min 6 chars): ');
+    const name = process.env.ADMIN_NAME || process.argv[2];
+    const email = process.env.ADMIN_EMAIL || process.argv[3];
+    const password = process.env.ADMIN_PASSWORD || process.argv[4];
 
     if (!name || !email || !password || password.length < 6) {
-      console.error('Name, valid email, and password (min 6 chars) are required');
+      console.error('Usage: node create-admin.js <name> <email> <password>');
+      console.error('   or: ADMIN_NAME=x ADMIN_EMAIL=x ADMIN_PASSWORD=x node create-admin.js');
+      console.error('Name, email, and password (min 6 chars) are required');
+      process.exit(1);
+    }
+
+    const existing = await User.findOne({ email });
+    if (existing) {
+      console.error(`User "${email}" already exists`);
       process.exit(1);
     }
 
