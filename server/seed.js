@@ -29,8 +29,8 @@ const seedData = async () => {
 
     await User.create({
       name: 'Admin',
-      email: 'admin@portfolio.com',
-      password: 'Asur@1()',
+      email: 'admin@example.com',
+      password: 'admin123',
     });
 
     await Profile.create({

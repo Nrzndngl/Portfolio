@@ -64,7 +64,7 @@ export default function About() {
                 </div>
               ))}
             </div>
-            <a href={profile?.resumeUrl || '#'} download className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-sm font-medium transition-all shadow-lg shadow-primary-500/25">
+            <a href={profile?.resumeUrl || '#'} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-sm font-medium transition-all shadow-lg shadow-primary-500/25">
               Download Resume
             </a>
           </motion.div>

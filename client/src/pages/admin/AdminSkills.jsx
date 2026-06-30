@@ -20,8 +20,18 @@ export default function AdminSkills() {
     try {
       if (editing) {
         const skill = skills.find(s => s._id === editing);
-        const updatedItems = skill.items.map(item => item._id === form.itemId ? { ...item, name: form.name, level: form.level } : item);
-        await api.put(`/skills/${editing}`, { category: skill.category, items: updatedItems });
+        if (skill.category === form.category) {
+          const updatedItems = skill.items.map(item => item._id === form.itemId ? { ...item, name: form.name, level: form.level } : item);
+          await api.put(`/skills/${editing}`, { category: skill.category, items: updatedItems });
+        } else {
+          await api.put(`/skills/${editing}`, { category: skill.category, items: skill.items.filter(i => i._id !== form.itemId) });
+          let target = skills.find(s => s.category === form.category);
+          if (target) {
+            await api.put(`/skills/${target._id}`, { category: form.category, items: [...target.items, { name: form.name, level: form.level }] });
+          } else {
+            await api.post('/skills', { category: form.category, items: [{ name: form.name, level: form.level }] });
+          }
+        }
         addToast('Skill updated', 'success');
       } else {
         let existing = skills.find(s => s.category === form.category);

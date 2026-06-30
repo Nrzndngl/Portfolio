@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import api from '../utils/api';
 
 export default function useFetch(url) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const controllerRef = useRef(null);
 
   const fetchData = useCallback(async (abortSignal) => {
     if (!url) return;
@@ -26,12 +27,20 @@ export default function useFetch(url) {
 
   useEffect(() => {
     const controller = new AbortController();
+    controllerRef.current = controller;
     fetchData(controller.signal);
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      controllerRef.current = null;
+    };
   }, [fetchData]);
 
   const refetch = useCallback(() => {
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
     const controller = new AbortController();
+    controllerRef.current = controller;
     fetchData(controller.signal);
   }, [fetchData]);
 

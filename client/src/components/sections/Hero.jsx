@@ -65,7 +65,7 @@ export default function Hero() {
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center gap-4 mb-12">
-          <a href={profile?.resumeUrl || '#'} download className="group px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full font-medium text-sm transition-all flex items-center gap-2 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40">
+          <a href={profile?.resumeUrl || '#'} className="group px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full font-medium text-sm transition-all flex items-center gap-2 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40">
             <FiDownload size={16} />
             Download Resume
           </a>
