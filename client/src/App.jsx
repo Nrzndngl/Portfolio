@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 import { setNavigate } from "./utils/api";
@@ -56,7 +56,21 @@ function PublicRoute({ children }) {
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   useEffect(() => { setNavigate(navigate); }, [navigate]);
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const tryScroll = () => {
+        const el = document.getElementById(id);
+        if (el) { el.scrollIntoView({ behavior: 'smooth' }); }
+        else { requestAnimationFrame(tryScroll); }
+      };
+      requestAnimationFrame(tryScroll);
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-dark-950 text-white font-sans transition-colors duration-300">
